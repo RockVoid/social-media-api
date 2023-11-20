@@ -14,8 +14,7 @@ export const getUser = (req, res) => {
 };
 
 export const updateUser = (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not authenticated!");
+  const token = tokenIsValid(req.cookies.accessToken, res);
 
   const { name, city, website, coverPic, profilePic, id } = req.body;
 
