@@ -14,7 +14,7 @@ export const getRelationships = (req, res) => {
 }
 
 export const addRelationship = (req, res) => {
-  const token = tokenIsValid(req.cookies.accessToken, res);
+  const token = tokenIsValid(req.headers.cookie, res);
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
@@ -34,7 +34,7 @@ export const addRelationship = (req, res) => {
 } 
 
 export const deleteRelationships = (req, res) => {
-  const token = tokenIsValid(req.cookies.accessToken, res);
+  const token = tokenIsValid(req.headers.cookie, res);
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     // Apaga, na tabela relationships, a aligação entre seguidor e seguido

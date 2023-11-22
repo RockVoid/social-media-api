@@ -14,7 +14,7 @@ export const getUser = (req, res) => {
 };
 
 export const updateUser = (req, res) => {
-  const token = tokenIsValid(req.cookies.accessToken, res);
+  const token = tokenIsValid(req.headers.cookie, res);
 
   const { name, city, website, coverPic, profilePic, id } = req.body;
 
