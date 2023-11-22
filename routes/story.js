@@ -5,6 +5,6 @@ const router = Router();
 
 router.get("/", getStories);
 router.post("/", addStory);
-router.delete("/:id", deleteStory)
+router.delete("/:storieId", deleteStory)
 
 export default router;
