@@ -1,6 +1,7 @@
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 import { tokenIsValid } from "../utils/tokenIsValid.js";
+import moment from "moment";
 
 export const getStories = (req, res) => {
   const token = tokenIsValid(req.cookies.accessToken, res);
@@ -19,8 +20,8 @@ export const getStories = (req, res) => {
 };
 
 export const addStory = (req, res) => {
-  const token = tokenIsValid(req.cookies.accessToken, res);
-
+  const token = tokenIsValid(req.headers.cookie, res);
+  
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token invalid!");
 
@@ -31,7 +32,7 @@ export const addStory = (req, res) => {
       userInfo.id
     ];
 
-    db.query(q, [values], (err) => {
+    db.query(q, [...values], (err) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json("Story has been added!");
     })
