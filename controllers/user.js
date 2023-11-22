@@ -1,5 +1,6 @@
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
+import { tokenIsValid } from "../utils/tokenIsValid.js";
 
 export const getUser = (req, res) => {
   const userId = req.params.userId;
@@ -16,13 +17,13 @@ export const getUser = (req, res) => {
 export const updateUser = (req, res) => {
   const token = tokenIsValid(req.headers.cookie, res);
 
-  const { name, city, website, coverPic, profilePic, id } = req.body;
+  const { name, city, website, coverPic, profilePic } = req.body;
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if(err) return res.status(403).json("Token Invalid!");
 
     const q =
-    "UPDATE users SET `name`=?,`city`=?,`website`=?,`profilePic`=?,`coverPic`=? WHERE id=? ";
+    "UPDATE users SET name=?,city=?,website=?,profilePic=?,coverPic=? WHERE id=? ";
 
     db.query(q, [
       name,
@@ -30,7 +31,7 @@ export const updateUser = (req, res) => {
       website,
       coverPic,
       profilePic,
-      id
+      userInfo.id
     ], 
     (err, data) => {
       if (err) res.status(500).json(err);
