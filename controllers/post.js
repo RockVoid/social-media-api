@@ -51,20 +51,18 @@ export const getPosts = (req, res) => {
   //  Modo simplificado:
   //  
   //  SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId);
-  //
-  //
-  const token = tokenIsValid(req.headers.cookies, res);
+  const token = tokenIsValid(req.headers.cookie, res);
   const userId = req.query.userId;
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const getTimelinePosts = 'SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC';  
-    const getSpecificUserPost = `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId)
-    LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId= ? OR p.userId =?
+    const getSpecificUserPost = 'SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.idUser) WHERE p.idUser = ? ORDER BY p.createdAt DESC';  
+    const getTimelinePosts = `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.idUser)
+    LEFT JOIN relationships AS r ON (p.idUser = r.followedUserId) WHERE r.followerUserId= ? OR p.idUser =?
     ORDER BY p.createdAt DESC`;
 
-    const q = (userId !== "undefined" ? getTimelinePosts : getSpecificUserPost);
+    const q = (userId !== "undefined" ? getSpecificUserPost : getTimelinePosts);
     const values = (userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id]);
 
     db.query(q, [...values], (err, data) => {
