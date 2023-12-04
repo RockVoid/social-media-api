@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { tokenIsValid } from "../utils/tokenIsValid.js";
 
 export const getRelationships = (req, res) => {
-  // Busca todos os seguidores que seguem o ID solicitado na query
+  // Retorna todos os seguidores que seguem o ID solicitado na query
   const q = "SELECT followerUserId FROM relationships WHERE followedUseriD = ?";
 
   db.query(q, [req.query.followedUserId], (err, data) => {
@@ -34,8 +34,8 @@ export const addRelationship = (req, res) => {
 export const deleteRelationships = (req, res) => {
   const token = tokenIsValid(req.headers.cookie, res);
 
-  jwt.verify(token, "secretkey", (err, userInfo) => {
-    // Apaga, na tabela relationships, a aligação entre seguidor e seguido
+  jwt.verify(token, "secretkey", (_, userInfo) => {
+    // Apaga, na tabela relationships, a ligação entre seguidor e seguido
     const q = "DELETE FROM relationships WHERE `followerUserId` = ? AND `followedUserId` = ?";
 
     db.query(q, [userInfo.id, req.query.id], (err, data) => {

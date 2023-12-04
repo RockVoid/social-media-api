@@ -4,12 +4,12 @@ import { tokenIsValid } from "../utils/tokenIsValid.js";
 import moment from "moment";
 
 export const addPost = (req, res) => {
-  const token = tokenIsValid(req.headers.cookies, res);
+  const token = tokenIsValid(req.headers.cookie, res);
 
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const q = "INSERT INTO posts(desc,img,createdAt,userId) VALUES(?,?,?,?)";
+    const q = "INSERT INTO posts(`description`, `img`, `createdAt`, `idUser`) VALUES (?,?,?,?)";
     const values = [
       req.body.desc,
       req.body.img,
@@ -17,7 +17,7 @@ export const addPost = (req, res) => {
       userInfo.id
     ];
 
-    db.query(q, [...values], (err) => {
+    db.query(q, values, (err) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json("Post has been created!");
     });
