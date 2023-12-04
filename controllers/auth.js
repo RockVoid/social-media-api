@@ -24,7 +24,6 @@ export const createUser = ({ username, email, password, name }, res) => {
 export const register = (req, res) => {
   const q = "SELECT * FROM users WHERE username = ?";
   const { username, email, password, name } = req.body;
-  
   db.query(q, [username], (err, data) => {
     if (err) return res.status(500).json(err);
     if (data.length) return res.status(409).json("User already registered!")

@@ -2,9 +2,8 @@ import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 import { tokenIsValid } from "../utils/tokenIsValid.js";
 
-// Usuario manda seu ID na query da request, então consultamos na tabela
-// RELACIONAMENTOS os usuarios que sao seus followers(Seguidores)
 export const getRelationships = (req, res) => {
+  // Busca todos os seguidores que seguem o ID solicitado na query
   const q = "SELECT followerUserId FROM relationships WHERE followedUseriD = ?";
 
   db.query(q, [req.query.followedUserId], (err, data) => {
@@ -15,18 +14,17 @@ export const getRelationships = (req, res) => {
 
 export const addRelationship = (req, res) => {
   const token = tokenIsValid(req.headers.cookie, res);
-
   jwt.verify(token, "secretkey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const q = "INSERT into relationships(`followerUserId`,`followedUserId`) VALUES (?,?)";
+    const q = "INSERT into relationships(followerUserId,followedUserId) VALUES (?,?)";
 
     const values = [
       userInfo.id,
       req.body.userId
     ];
 
-    db.query(q, [values], (err, data) => {
+    db.query(q, [...values], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json("Following!");
     });
