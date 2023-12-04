@@ -2,6 +2,16 @@ import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 import { tokenIsValid } from "../utils/tokenIsValid.js";
 
+export const getUsers = (_, res) => {
+  const q = "SELECT username, name, email, id FROM users";
+  
+  db.query(q, [], (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(data);
+  });
+};
+
 export const getUser = (req, res) => {
   const userId = req.params.userId;
   const q = "SELECT * FROM users WHERE id=?";
