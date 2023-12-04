@@ -4,7 +4,9 @@ import dotenv from "dotenv"
 dotenv.config()
 
 export const db = mysql.createConnection({
-  host: "localhost",
+  port: process.env.MYSQL_PORT,
+  host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
-  database: process.env.MYSQL_DB
+  database: process.env.MYSQL_DB,
+  password: process.env.MYSQL_PASSWORD
 });

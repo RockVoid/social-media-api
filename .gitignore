@@ -12,6 +12,7 @@
 
 # misc
 /.env
+/.env_PROD
 .DS_Store
 .env.local
 .env.development.local
